@@ -4,6 +4,7 @@ import ProductDetails from "./ProductDetails"
 import { useMemo } from "react"
 import { formatCurrency } from "@/src/utils"
 import { createOrder } from "@/actions/create-order-action"
+import { OrderSchema } from "@/src/schema"
 
 
 export default function OrderSummary() {
@@ -11,9 +12,14 @@ export default function OrderSummary() {
 
   const total = useMemo(() => order.reduce((total, item) => total + (item.quantity * item.price), 0), [order])
 
-  const handleCreateorder = () => {
-    console.log('desde el handle')
+  const handleCreateorder = (formData: FormData) => {
+    const data = {
+      name: formData.get('name')
+    }
 
+    const result = OrderSchema.safeParse(data)
+    console.log(result)
+    return
     createOrder()
   }
 
@@ -39,6 +45,12 @@ export default function OrderSummary() {
             className="w-full mt-10 space-y-5"
             action={handleCreateorder}
           >
+            <input 
+              type="text"
+              placeholder="Tu Nombre"
+              className="bg-white border border-gray-100 p-2 w-full"
+              name="name" 
+            />
             <input
               type="submit"
               className="py-2 rounded uppercase text-white bg-black w-full text-center cursor-pointer font-bold"
